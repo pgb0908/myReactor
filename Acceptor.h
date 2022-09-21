@@ -6,17 +6,19 @@
 #define REACTOR_ACCEPTOR_H
 
 #include "EventHandler.h"
+#include "INETAddr.h"
 
 class Acceptor: public EventHandler{
 public:
-    Acceptor(const INET_Addr &addr);
+    explicit Acceptor(const INETAddr &addr);
 
-    virtual int handle_event (EventType et);
+    int handle_event(EventType et) override;
 
     Handle get_handle();
 
 private:
-    Sock_acceptor acceptor_;
+    Handle handle_;
+    INETAddr addr_;
 };
 
 

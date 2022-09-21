@@ -5,7 +5,8 @@
 #ifndef REACTOR_EVENTHANDLER_H
 #define REACTOR_EVENTHANDLER_H
 
-class EventType;
+#include "Handle.h"
+#include "InitiationDispatcher.h"
 
 class EventHandler{
 public:

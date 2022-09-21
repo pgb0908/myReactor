@@ -25,6 +25,9 @@ public:
     int remove_handler(EventHandler *eh, EventType et);
 
     int handle_events(EventHandler *timeout = 0);
+
+private:
+    int events_;
 };
 
 #endif //REACTOR_INITIATIONDISPATCHER_H
