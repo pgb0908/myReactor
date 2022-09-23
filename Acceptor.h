@@ -12,7 +12,7 @@ class Acceptor: public EventHandler{
 public:
     explicit Acceptor(const INETAddr &addr);
 
-    int handle_event(EventType et) override;
+    int handle_event() override;
 
     Handle get_handle();
 

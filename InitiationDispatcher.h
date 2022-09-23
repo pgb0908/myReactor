@@ -5,29 +5,35 @@
 #ifndef REACTOR_INITIATIONDISPATCHER_H
 #define REACTOR_INITIATIONDISPATCHER_H
 
-enum class EventType
-{
-    ACCEPT_EVENT = 01,
-    READ_EVENT = 02,
-    WRITE_EVENT = 04,
-    TIMEOUT_EVENT = 010,
-    SIGNAL_EVENT = 020,
-    CLOSE_EVENT = 040
-};
+#include <unordered_map>
+#include <memory>
+#include <sys/epoll.h>
+
+#define MAX_CONN 15
+
 
 class EventHandler;
+class EventLoop;
 
 class InitiationDispatcher{
 
 public:
-    int register_handler(EventHandler *eh, EventType et);
+    InitiationDispatcher();
+    ~InitiationDispatcher();
 
-    int remove_handler(EventHandler *eh, EventType et);
+    static const int kNoneEvent;
+    static const int kReadEvent;
+    static const int kWriteEvent;
 
-    int handle_events(EventHandler *timeout = 0);
+    void register_handler(EventHandler* eh);
+
+    void remove_handler(EventHandler* eh);
+
+    void handle_events();
+
 
 private:
-    int events_;
+    std::unique_ptr<EventLoop> loop_;
 };
 
 #endif //REACTOR_INITIATIONDISPATCHER_H

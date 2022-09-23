@@ -3,15 +3,31 @@
 //
 
 #include "InitiationDispatcher.h"
+#include <iostream>
+#include <cstring>
+#include "EventHandler.h"
+#include "EventLoop.h"
+#include <poll.h>
 
-int InitiationDispatcher::register_handler(EventHandler *eh, EventType et) {
-    return 0;
+
+const int InitiationDispatcher::kNoneEvent = 0;
+const int InitiationDispatcher::kReadEvent = POLLIN | POLLPRI;
+const int InitiationDispatcher::kWriteEvent = POLLOUT;
+
+void InitiationDispatcher::register_handler(EventHandler *eh) {
+    loop_->updateEvent(eh);
 }
 
-int InitiationDispatcher::remove_handler(EventHandler *eh, EventType et) {
-    return 0;
+void InitiationDispatcher::remove_handler(EventHandler* eh) {
+    loop_->removeEvent(eh);
 }
 
-int InitiationDispatcher::handle_events(EventHandler *timeout) {
+void InitiationDispatcher::handle_events() {
+    loop_->loop();
+}
+
+InitiationDispatcher::~InitiationDispatcher() = default;
+
+InitiationDispatcher::InitiationDispatcher() : loop_(new EventLoop) {
 
 }

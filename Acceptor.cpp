@@ -9,7 +9,7 @@ Acceptor::Acceptor(const INETAddr &addr) : handle_(0) {
 
 }
 
-int Acceptor::handle_event(EventType et) {
+int Acceptor::handle_event() {
     return 0;
 }
 

@@ -3,4 +3,17 @@ project(reactor)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(reactor main.cpp InitiationDispatcher.h EventHandler.h Acceptor.h InitiationDispatcher.cpp Acceptor.cpp Handle.cpp Handle.h INETAddr.cpp INETAddr.h EventLoop.cpp EventLoop.h)
+add_executable(reactor main.cpp
+        InitiationDispatcher.h
+        EventHandler.h
+        Acceptor.h
+        InitiationDispatcher.cpp
+        Acceptor.cpp
+        Handle.cpp
+        Handle.h
+        INETAddr.cpp
+        INETAddr.h
+        EventLoop.cpp
+        EventLoop.h
+        Poller.cpp
+        Poller.h)
