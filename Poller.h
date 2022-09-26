@@ -8,6 +8,7 @@
 #include <vector>
 #include <sys/epoll.h>
 #include <map>
+#include <memory>
 
 class EventLoop;
 class EventHandler;
@@ -20,16 +21,16 @@ public:
     ~Poller();
 
     void poll(int timeoutMs, std::vector<EventHandler *> *activeChannels);
-    void updateEvent(EventHandler *event);
-    void removeEvent(EventHandler *event);
+    void updateEvent(std::shared_ptr<EventHandler>& event);
+    void removeEvent(std::shared_ptr<EventHandler>& event);
 
 private:
     EventLoop *ownerLoop_;
     static const int kInitEventListSize = 16;
     int epollfd_;
     EventList events_;
-    void update(int operation, EventHandler *channel);
-    using EventHandlerMap = std::map<int, EventHandler *>;
+    void update(int operation, std::shared_ptr<EventHandler> channel);
+    using EventHandlerMap = std::map<int, std::shared_ptr<EventHandler>>;
     EventHandlerMap eventHandlerMap;
     void fillActiveChannels(int numEvents, std::vector<EventHandler *> *activeChannels) const;
 };

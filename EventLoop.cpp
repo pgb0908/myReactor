@@ -7,7 +7,7 @@
 #include "EventHandler.h"
 #include "Poller.h"
 
-const int kPollTimeMs = 10000;
+const int kPollTimeMs = 5000;
 
 EventLoop::EventLoop() : looping_(false), quit_(false),eventHandling_(false),
                         poller_(new Poller(this)) {
@@ -15,6 +15,7 @@ EventLoop::EventLoop() : looping_(false), quit_(false),eventHandling_(false),
 }
 
 EventLoop::~EventLoop() {
+    std::cout << "EventLoop is destructed " << std::endl;
     struct timespec delay = {0, 1000000}; /* 1 msec */
 
     quit();
@@ -39,6 +40,7 @@ void EventLoop::loop() {
     while (!quit_.load(std::memory_order_acquire)) {
         activeChannels_.clear();
 
+        std::cout << "looping..." << std::endl;
         poller_->poll(kPollTimeMs, &activeChannels_);
 
         eventHandling_ = true;
@@ -51,10 +53,10 @@ void EventLoop::loop() {
     }
 }
 
-void EventLoop::updateEvent(EventHandler *eventHandler) {
+void EventLoop::updateEvent(std::shared_ptr<EventHandler>& eventHandler) {
     poller_->updateEvent(eventHandler);
 }
 
-void EventLoop::removeEvent(EventHandler *eventHandler) {
+void EventLoop::removeEvent(std::shared_ptr<EventHandler>& eventHandler) {
     poller_->removeEvent(eventHandler);
 }

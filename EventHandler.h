@@ -10,8 +10,8 @@
 
 class EventHandler{
 public:
-    virtual int handle_event() = 0;
-    virtual Handle get_handle() const = 0;
+    virtual void handle_event() = 0;
+    virtual std::shared_ptr<Handle> get_handle() const = 0;
 
     int events(){return events_;};
     int index(){return index_;};
@@ -28,6 +28,12 @@ public:
     {
         index_ = index;
     };
+
+    void setEvents(int index)
+    {
+        events_ = index;
+    };
+
 
     bool isNoneEvent() const
     {

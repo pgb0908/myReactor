@@ -7,18 +7,24 @@
 
 #include "EventHandler.h"
 #include "INETAddr.h"
+#include "TcpConnection.h"
+#include <set>
 
 class Acceptor: public EventHandler{
 public:
     explicit Acceptor(const INETAddr &addr);
 
-    int handle_event() override;
+    void handle_event() override;
 
-    Handle get_handle();
+    std::shared_ptr<Handle> get_handle() const override;
 
 private:
-    Handle handle_;
+    std::shared_ptr<Handle> handle_;
     INETAddr addr_;
+    int idleFd_;
+    std::set<std::shared_ptr<TcpConnection>> connSet_;
+
+    std::shared_ptr<TcpConnection> newConnection(int newsock, INETAddr addr);
 };
 
 

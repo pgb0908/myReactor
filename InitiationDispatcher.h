@@ -25,9 +25,9 @@ public:
     static const int kReadEvent;
     static const int kWriteEvent;
 
-    void register_handler(EventHandler* eh);
+    void register_handler(std::shared_ptr<EventHandler>& eh);
 
-    void remove_handler(EventHandler* eh);
+    void remove_handler(std::shared_ptr<EventHandler>&  eh);
 
     void handle_events();
 

@@ -23,7 +23,7 @@ public:
             std::cout << "sockets::createNonblockingOrDie";
             exit(1);
         }
-        std::cout << "sock=" << sock;
+        std::cout << "sock=" << sock << std::endl;
         return sock;
     }
 

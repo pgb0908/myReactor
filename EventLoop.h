@@ -21,8 +21,8 @@ public:
 
     void quit();
 
-    void updateEvent(EventHandler* eventHandler);
-    void removeEvent(EventHandler* eventHandler);
+    void updateEvent(std::shared_ptr<EventHandler>&  eventHandler);
+    void removeEvent(std::shared_ptr<EventHandler>& eventHandler);
 
 private:
     std::atomic<bool> looping_;

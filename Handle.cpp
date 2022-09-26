@@ -55,7 +55,7 @@
 #define TCP_REPAIR_OFF_NO_WP	 -1
 
 Handle::~Handle() {
-    std::cout << "Socket deconstructed:" << sockFd_;
+    std::cout << "Socket deconstructed:" << sockFd_ << std::endl;
     if (sockFd_ >= 0)  close(sockFd_);
 
 }

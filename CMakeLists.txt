@@ -16,4 +16,13 @@ add_executable(reactor main.cpp
         EventLoop.cpp
         EventLoop.h
         Poller.cpp
-        Poller.h)
+        Poller.h
+        TcpServer.cpp
+        TcpServer.h
+        AppLogging.cpp
+        AppLogging.h
+        TcpConnection.h
+        TcpConnectionImpl.cpp
+        TcpConnectionImpl.h
+        MsgBuffer.cpp
+        MsgBuffer.h)

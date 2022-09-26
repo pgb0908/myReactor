@@ -14,11 +14,11 @@ const int InitiationDispatcher::kNoneEvent = 0;
 const int InitiationDispatcher::kReadEvent = POLLIN | POLLPRI;
 const int InitiationDispatcher::kWriteEvent = POLLOUT;
 
-void InitiationDispatcher::register_handler(EventHandler *eh) {
+void InitiationDispatcher::register_handler(std::shared_ptr<EventHandler>& eh) {
     loop_->updateEvent(eh);
 }
 
-void InitiationDispatcher::remove_handler(EventHandler* eh) {
+void InitiationDispatcher::remove_handler(std::shared_ptr<EventHandler>&  eh) {
     loop_->removeEvent(eh);
 }
 

@@ -27,7 +27,7 @@ void Poller::poll(int timeoutMs, std::vector<EventHandler *> *activeChannels) {
 
     if (numEvents > 0)
     {
-        // LOG_TRACE << numEvents << " events happended";
+        std::cout << numEvents << " events happended" << std::endl;
         fillActiveChannels(numEvents, activeChannels);
         if (static_cast<size_t>(numEvents) == events_.size())
         {
@@ -50,12 +50,12 @@ void Poller::poll(int timeoutMs, std::vector<EventHandler *> *activeChannels) {
     return;
 }
 
-void Poller::updateEvent(EventHandler *event) {
+void Poller::updateEvent(std::shared_ptr<EventHandler>& event) {
     const int index = event->index();
     //  << " events = " << channel->events() << " index = " << index;
-    if (index == kNew || index == kDeleted)
+    if (index == kNew || index == kDeleted)  // -1 | 2
     {
-        int fd = event->get_handle().fd();
+        int fd = event->get_handle()->fd();
         if (index == kNew)
         {
             assert(eventHandlerMap.find(fd) == eventHandlerMap.end());
@@ -69,7 +69,7 @@ void Poller::updateEvent(EventHandler *event) {
         event->setIndex(kAdded);
         update(EPOLL_CTL_ADD, event);
     }else{
-        int fd = event->get_handle().fd();
+        int fd = event->get_handle()->fd();
         (void)fd;
         assert(eventHandlerMap.find(fd) != eventHandlerMap.end());
         assert(eventHandlerMap[fd] == event);
@@ -87,8 +87,8 @@ void Poller::updateEvent(EventHandler *event) {
     }
 }
 
-void Poller::removeEvent(EventHandler *event) {
-    int fd = event->get_handle().fd();
+void Poller::removeEvent(std::shared_ptr<EventHandler>& event) {
+    int fd = event->get_handle()->fd();
     assert(eventHandlerMap.find(fd) != eventHandlerMap.end());
     assert(eventHandlerMap[fd] == event);
     size_t n = eventHandlerMap.erase(fd);
@@ -110,33 +110,31 @@ void Poller::fillActiveChannels(int numEvents, std::vector<EventHandler *> *acti
     for (int i = 0; i < numEvents; ++i)
     {
         EventHandler *eventHandler = static_cast<EventHandler *>(events_[i].data.ptr);
-        int fd = eventHandler->get_handle().fd();
+        int fd = eventHandler->get_handle()->fd();
         EventHandlerMap::const_iterator it = eventHandlerMap.find(fd);
         assert(it != eventHandlerMap.end());
-        assert(it->second == eventHandler);
+        //assert(it->second == eventHandler);
 
         eventHandler->setRevents(events_[i].events);
         activeEventHandlers->push_back(eventHandler);
     }
 }
 
-void Poller::update(int operation, EventHandler *eventHandler) {
+void Poller::update(int operation, std::shared_ptr<EventHandler> eventHandler) {
     struct epoll_event event;
     memset(&event, 0, sizeof(event));
     event.events = eventHandler->events();
-    event.data.ptr = eventHandler;
-    int fd = eventHandler->get_handle().fd();
+    event.data.ptr = eventHandler.get();
+    int fd = eventHandler->get_handle()->fd();
     if (::epoll_ctl(epollfd_, operation, fd, &event) < 0)
     {
         if (operation == EPOLL_CTL_DEL)
         {
-            // LOG_SYSERR << "epoll_ctl op =" << operationToString(operation) <<
-            // " fd =" << fd;
+            std::cout << "epoll_ctl op =" << operation <<" fd =" << fd << std::endl;
         }
         else
         {
-            //  LOG_SYSFATAL << "epoll_ctl op =" << operationToString(operation)
-            //  << " fd =" << fd;
+            std::cout << "epoll_ctl op =" << operation<< " fd =" << fd << std::endl;
         }
     }
 }
