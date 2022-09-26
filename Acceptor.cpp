@@ -6,7 +6,7 @@
 #include "TcpConnectionImpl.h"
 
 
-Acceptor::Acceptor(const INETAddr &addr) : addr_(addr),
+Acceptor::Acceptor(const INETAddr &addr) : EventHandler(0, -1, 0), addr_(addr),
                                            idleFd_(::open("/dev/null", O_RDONLY | O_CLOEXEC)){
     handle_ = std::make_shared<Handle>(Handle::createNonblockingSocketOrDie(addr.getSockAddr()->sa_family));
 
@@ -14,15 +14,12 @@ Acceptor::Acceptor(const INETAddr &addr) : addr_(addr),
 
     handle_->bindAddress(addr_);
     handle_->listen();
+    enableReading();
 
-    setIndex(-1);
-    setEvents(EPOLLIN);
-
-
-/*    if (addr_.toPort() == 0)
+    if (addr_.toPort() == 0)
     {
         addr_ = INETAddr{Handle::getLocalAddr(handle_->fd())};
-    }*/
+    }
 }
 
 void Acceptor::handle_event() {
@@ -33,7 +30,6 @@ void Acceptor::handle_event() {
         auto newPtr = newConnection(newsock, peer);
         connSet_.insert(newPtr);
         newPtr->connectEstablished();
-
     }
     else{
         if (errno == EMFILE)

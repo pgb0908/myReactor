@@ -7,7 +7,7 @@
 TcpServer::TcpServer(INETAddr addr) : reactorPtr_(new InitiationDispatcher),
                                       addr_(addr),
                                       connectionCallback_(std::dynamic_pointer_cast<EventHandler>(std::make_shared<Acceptor>(addr))),
-                                      recvMessageCallback_(new AppLogging){
+                                      recvMessageCallback_(nullptr){
 
     std::cout << "addr : " <<  addr_.toIp()  << ":" << addr_.toPort() << std::endl;
 

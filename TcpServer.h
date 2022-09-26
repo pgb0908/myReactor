@@ -9,7 +9,7 @@
 #include "INETAddr.h"
 #include "EventHandler.h"
 #include "Acceptor.h"
-#include "AppLogging.h"
+#include "IoEventor.h"
 
 class TcpServer {
 public:

@@ -19,8 +19,8 @@ add_executable(reactor main.cpp
         Poller.h
         TcpServer.cpp
         TcpServer.h
-        AppLogging.cpp
-        AppLogging.h
+        IoEventor.cpp
+        IoEventor.h
         TcpConnection.h
         TcpConnectionImpl.cpp
         TcpConnectionImpl.h

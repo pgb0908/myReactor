@@ -7,6 +7,7 @@
 
 #include "TcpConnection.h"
 #include "INETAddr.h"
+#include "EventHandler.h"
 
 class TcpConnectionImpl : public TcpConnection{
 public:
@@ -16,21 +17,24 @@ public:
                       const INETAddr &peerAddr);
     virtual ~TcpConnectionImpl() = default;
 
-    void send(const char *msg, size_t len) override;
-
-    void send(const std::string &msg) override;
-
-    void send(std::string &&msg) override;
-
-    void send(const MsgBuffer &buffer) override;
-
-    void send(const std::shared_ptr<std::string> &msgPtr) override;
-
-    void send(const std::shared_ptr<MsgBuffer> &msgPtr) override;
-
     bool connected() const override;
 
     void connectEstablished() override;
+
+private:
+
+    enum class ConnStatus
+    {
+        Disconnected,
+        Connecting,
+        Connected,
+        Disconnecting
+    };
+    ConnStatus status_{ConnStatus::Connecting};
+
+    std::shared_ptr<EventHandler> ioEventPtr_;
+    INETAddr localAddr_, peerAddr_;
+    std::string name_;
 
 };
 
