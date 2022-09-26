@@ -31,9 +31,13 @@ public:
 
     void handle_events();
 
+    std::shared_ptr<EventLoop>  getLoop(){
+        return loop_;
+    }
+
 
 private:
-    std::unique_ptr<EventLoop> loop_;
+    std::shared_ptr<EventLoop> loop_;
 };
 
 #endif //REACTOR_INITIATIONDISPATCHER_H

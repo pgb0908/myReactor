@@ -12,7 +12,7 @@
 
 class Acceptor: public EventHandler{
 public:
-    explicit Acceptor(const INETAddr &addr);
+    explicit Acceptor(const std::shared_ptr<EventLoop>& loop, const INETAddr &addr);
 
     void handle_event() override;
 
@@ -23,6 +23,7 @@ private:
     INETAddr addr_;
     int idleFd_;
     std::set<std::shared_ptr<TcpConnection>> connSet_;
+    std::shared_ptr<EventLoop> loop_;
 
     std::shared_ptr<TcpConnection> newConnection(int newsock, INETAddr addr);
 };

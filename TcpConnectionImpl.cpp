@@ -18,25 +18,16 @@ void TcpConnectionImpl::connectEstablished() {
     status_ =  ConnStatus::Connected;
 
     // todo connetion callback, IoEventor가 여러 이벤트를 컬백으로 처리할 수 있도록 해야함
-/*    if (ioEventPtr_->connectionCallback_){
-        connectionCallback_();
-    }*/
+    //ioEventPtr_->connectionCall();
 }
 
-TcpConnectionImpl::TcpConnectionImpl(int socketfd, const INETAddr &localAddr, const INETAddr &peerAddr):
-        ioEventPtr_(std::make_shared<IoEventor>()),
+TcpConnectionImpl::TcpConnectionImpl(std::shared_ptr<EventLoop>& loop, int socketfd, const INETAddr &localAddr, const INETAddr &peerAddr):
+        loop_(loop),
+        ioEventPtr_(std::make_shared<IoEventor>(loop, socketfd)),
         localAddr_(localAddr),
         peerAddr_(peerAddr){
     std::cout << "new connection:" << peerAddr.toIpPort() << "->" << localAddr.toIpPort() << std::endl;
 
-/*    ioEventPtr_->setReadCallback(
-            std::bind(&TcpConnectionImpl::readCallback, this));
-    ioEventPtr_->setWriteCallback(
-            std::bind(&TcpConnectionImpl::writeCallback, this));
-    ioEventPtr_->setCloseCallback(
-            std::bind(&TcpConnectionImpl::handleClose, this));
-    ioEventPtr_->setErrorCallback(
-            std::bind(&TcpConnectionImpl::handleError, this));*/
     //ioEventPtr_->get_handle()->setKeepAlive(true);
     name_ = localAddr.toIpPort() + "--" + peerAddr.toIpPort();
 

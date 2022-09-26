@@ -6,8 +6,11 @@
 #include "TcpConnectionImpl.h"
 
 
-Acceptor::Acceptor(const INETAddr &addr) : EventHandler(0, -1, 0), addr_(addr),
-                                           idleFd_(::open("/dev/null", O_RDONLY | O_CLOEXEC)){
+Acceptor::Acceptor(const std::shared_ptr<EventLoop>& loop, const INETAddr &addr) :
+            EventHandler(0, -1, 0),
+            loop_(loop),
+            addr_(addr),
+            idleFd_(::open("/dev/null", O_RDONLY | O_CLOEXEC)){
     handle_ = std::make_shared<Handle>(Handle::createNonblockingSocketOrDie(addr.getSockAddr()->sa_family));
 
     std::cout << "Acceptor addr : " << addr_.toIpPort() << std::endl;
@@ -52,23 +55,10 @@ std::shared_ptr<TcpConnection> Acceptor::newConnection(int sockfd, INETAddr peer
 
     std::shared_ptr<TcpConnectionImpl> newPtr;
 
-    newPtr = std::make_shared<TcpConnectionImpl>(sockfd,
+    newPtr = std::make_shared<TcpConnectionImpl>(loop_,
+                                                 sockfd,
                                                  INETAddr(Handle::getLocalAddr(sockfd)),
                                                  peer);
-/*    newPtr->setRecvMsgCallback(recvMessageCallback_);
-
-    newPtr->setConnectionCallback(
-            [this](const TcpConnectionPtr &connectionPtr) {
-                if (connectionCallback_)
-                    connectionCallback_(connectionPtr);
-            });
-    newPtr->setWriteCompleteCallback(
-            [this](const TcpConnectionPtr &connectionPtr) {
-                if (writeCompleteCallback_)
-                    writeCompleteCallback_(connectionPtr);
-            });
-    newPtr->setCloseCallback(std::bind(&TcpServer::connectionClosed, this, _1));
-            */
 
     return newPtr;
 }

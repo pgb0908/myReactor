@@ -12,7 +12,7 @@
 class TcpConnectionImpl : public TcpConnection{
 public:
     TcpConnectionImpl() = default;
-    TcpConnectionImpl(int socketfd,
+    TcpConnectionImpl(std::shared_ptr<EventLoop>& loop, int socketfd,
                       const INETAddr &localAddr,
                       const INETAddr &peerAddr);
     virtual ~TcpConnectionImpl() = default;
@@ -35,6 +35,7 @@ private:
     std::shared_ptr<EventHandler> ioEventPtr_;
     INETAddr localAddr_, peerAddr_;
     std::string name_;
+    std::shared_ptr<EventLoop> loop_;
 
 };
 
